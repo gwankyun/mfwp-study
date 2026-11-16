@@ -164,6 +164,35 @@ val () = check "" ((f [[1, 2], [3, 4]]) = [1, 2, 3, 4])
 val () = check "" ((f [[1, 2], [3, 4]]) = f((1::[2])::[[3, 4]]))
 val () = check "" ((f [[1, 2], [3, 4]]) = 1 :: f([2]::[[3, 4]]))
 val () = check "" ((f [[1, 2], [3, 4]]) = (1 :: f [[2], [3, 4]]))
+(* val () = check "" ((f [[1, 2], [3, 4]]) = (1 :: f ((2::[])::[[3, 4]]))) *)
 (* val () = check "" ((f [[1, 2], [3, 4]]) = (1 :: (f (2::[])::[[3, 4]]))) *)
+
+(* 練習3.9 *)
+
+fun zip(x::xs, y::ys) = (x, y)::zip(xs, ys)
+  | zip([], _::_) = []
+  | zip(_::_, []) = []
+  | zip([], []) = []
+
+(* 練習3.10
+和i的位置有關
+*)
+
+fun change (_, 0) = []
+  | change ([], _) = []
+  | change (c::coinvals, amount) = (* c是硬幣值，amount是當前錢數 *)
+    if amount < c then change(coinvals, amount) (* c太大了，不用 *)
+      else c :: change(c::coinvals, amount - c) (* 用一個c *)
+
+fun allChange (coins, _, 0) = [coins]
+  | allChange (_, [], _) = []
+  | allChange (coins, c::coinvals, amount) =
+    (* coins 已取硬幣列表
+       c::coinvals 可取硬幣列表
+       amount 賬戶
+    *)
+    if amount < 0 then []
+      else allChange(c::coins, c::coinvals, amount - c) @
+        allChange(coins, coinvals, amount)
 
 val () = Check.done ()
