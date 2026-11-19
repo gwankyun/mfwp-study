@@ -24,14 +24,18 @@ fun maxl ns =
   end
 
 (* ---- maxl 測試 ---- *)
-val () = check "maxl [1] = 1" (maxl [1] = 1)
-val () = check "maxl [1,2,3] = 3" (maxl [1,2,3] = 3)
-val () = check "maxl [3,2,1] = 3" (maxl [3,2,1] = 3)
-val () = check "maxl [2,5,1,4] = 5" (maxl [2,5,1,4] = 5)
-val () = check "maxl [7,7,3] = 7" (maxl [7,7,3] = 7)
-val () = check "maxl [5,1,5] = 5" (maxl [5,1,5] = 5)
-val () = check "maxl [~1,~5,~3] = ~1" (maxl [~1,~5,~3] = ~1)
-val () = check "maxl [10,9,8,7,6,5,4,3,2,1] = 10" (maxl [10,9,8,7,6,5,4,3,2,1] = 10)
+fun testMaxl () = (
+  check "maxl [1] = 1" (maxl [1] = 1);
+  check "maxl [1,2,3] = 3" (maxl [1,2,3] = 3);
+  check "maxl [3,2,1] = 3" (maxl [3,2,1] = 3);
+  check "maxl [2,5,1,4] = 5" (maxl [2,5,1,4] = 5);
+  check "maxl [7,7,3] = 7" (maxl [7,7,3] = 7);
+  check "maxl [5,1,5] = 5" (maxl [5,1,5] = 5);
+  check "maxl [~1,~5,~3] = ~1" (maxl [~1,~5,~3] = ~1);
+  check "maxl [10,9,8,7,6,5,4,3,2,1] = 10" (maxl [10,9,8,7,6,5,4,3,2,1] = 10);
+  ()
+)
+val () = testMaxl ()
 
 (* 練習3.2 *)
 
@@ -40,14 +44,18 @@ fun last [x] = x
   | last [] = raise Empty
 
 (* ---- last 測試 ---- *)
-val () = check "last [1] = 1" (last [1] = 1)
-val () = check "last [1,2] = 2" (last [1,2] = 2)
-val () = check "last [1,2,3] = 3" (last [1,2,3] = 3)
-val () = check "last [1,1,1] = 1" (last [1,1,1] = 1)
-val () = check "last [~1,~2] = ~2" (last [~1,~2] = ~2)
-val () = check "last [\"a\",\"b\"] = \"b\"" (last ["a","b"] = "b")
-val () = check "last [(1,2),(3,4)] = (3,4)" (last [(1,2),(3,4)] = (3,4))
-val () = check "last [[1],[2],[3]] = [3]" (last [[1],[2],[3]] = [3])
+fun testLast () = (
+  check "last [1] = 1" (last [1] = 1);
+  check "last [1,2] = 2" (last [1,2] = 2);
+  check "last [1,2,3] = 3" (last [1,2,3] = 3);
+  check "last [1,1,1] = 1" (last [1,1,1] = 1);
+  check "last [~1,~2] = ~2" (last [~1,~2] = ~2);
+  check "last [\"a\",\"b\"] = \"b\"" (last ["a","b"] = "b");
+  check "last [(1,2),(3,4)] = (3,4)" (last [(1,2),(3,4)] = (3,4));
+  check "last [[1],[2],[3]] = [3]" (last [[1],[2],[3]] = [3]);
+  ()
+)
+val () = testLast ()
 
 local
   fun addLen (n, [])   = n
@@ -79,26 +87,30 @@ fun nth ([], _) = raise Subscript
 
 (* ---- nth 測試 ---- *)
 (* 用 handle 包住呼叫，讓失敗顯示 FAIL 而不是中斷整個腳本 *)
-val () = check "nth ([10,20,30], 0) = 10"
-  ((nth ([10,20,30], 0) = 10) handle Subscript => false | Match => false)
-val () = check "nth ([10,20,30], 1) = 20"
-  ((nth ([10,20,30], 1) = 20) handle Subscript => false | Match => false)
-val () = check "nth ([10,20,30], 2) = 30"
-  ((nth ([10,20,30], 2) = 30) handle Subscript => false | Match => false)
-val () = check "nth ([42], 0) = 42"
-  ((nth ([42], 0) = 42) handle Subscript => false | Match => false)
+fun testNth () = (
+  check "nth ([10,20,30], 0) = 10"
+    ((nth ([10,20,30], 0) = 10) handle Subscript => false | Match => false);
+  check "nth ([10,20,30], 1) = 20"
+    ((nth ([10,20,30], 1) = 20) handle Subscript => false | Match => false);
+  check "nth ([10,20,30], 2) = 30"
+    ((nth ([10,20,30], 2) = 30) handle Subscript => false | Match => false);
+  check "nth ([42], 0) = 42"
+    ((nth ([42], 0) = 42) handle Subscript => false | Match => false);
 
-val () = check "nth ([1,2,3], 3) raises Subscript"
-  ((ignore (nth ([1,2,3], 3)); false) handle Subscript => true | Match => false)
-val () = check "nth ([], 0) raises Subscript"
-  ((ignore (nth ([], 0)); false) handle Subscript => true | Match => false)
-val () = check "nth ([1,2], ~1) raises Subscript"
-  ((ignore (nth ([1,2], ~1)); false) handle Subscript => true | Match => false)
+  check "nth ([1,2,3], 3) raises Subscript"
+    ((ignore (nth ([1,2,3], 3)); false) handle Subscript => true | Match => false);
+  check "nth ([], 0) raises Subscript"
+    ((ignore (nth ([], 0)); false) handle Subscript => true | Match => false);
+  check "nth ([1,2], ~1) raises Subscript"
+    ((ignore (nth ([1,2], ~1)); false) handle Subscript => true | Match => false);
 
-val () = check "nth ([\"a\",\"b\"], 1) = \"b\""
-  ((nth (["a","b"], 1) = "b") handle Subscript => false | Match => false)
-val () = check "nth ([(1,2),(3,4)], 0) = (1,2)"
-  ((nth ([(1,2),(3,4)], 0) = (1,2)) handle Subscript => false | Match => false)
+  check "nth ([\"a\",\"b\"], 1) = \"b\""
+    ((nth (["a","b"], 1) = "b") handle Subscript => false | Match => false);
+  check "nth ([(1,2),(3,4)], 0) = (1,2)"
+    ((nth ([(1,2),(3,4)], 0) = (1,2)) handle Subscript => false | Match => false);
+  ()
+)
+val () = testNth ()
 
 (* 練習3.5 *)
 
@@ -160,10 +172,14 @@ fun f []= []
   | f ([]::ls)                     = f ls
   | f ((x::l)::ls)                 = x :: f(l::ls)
 
-val () = check "" ((f [[1, 2], [3, 4]]) = [1, 2, 3, 4])
-val () = check "" ((f [[1, 2], [3, 4]]) = f((1::[2])::[[3, 4]]))
-val () = check "" ((f [[1, 2], [3, 4]]) = 1 :: f([2]::[[3, 4]]))
-val () = check "" ((f [[1, 2], [3, 4]]) = (1 :: f [[2], [3, 4]]))
+fun testF () = (
+  check "" ((f [[1, 2], [3, 4]]) = [1, 2, 3, 4]);
+  check "" ((f [[1, 2], [3, 4]]) = f((1::[2])::[[3, 4]]));
+  check "" ((f [[1, 2], [3, 4]]) = 1 :: f([2]::[[3, 4]]));
+  check "" ((f [[1, 2], [3, 4]]) = (1 :: f [[2], [3, 4]]));
+  ()
+)
+val () = testF ()
 (* val () = check "" ((f [[1, 2], [3, 4]]) = (1 :: f ((2::[])::[[3, 4]]))) *)
 (* val () = check "" ((f [[1, 2], [3, 4]]) = (1 :: (f (2::[])::[[3, 4]]))) *)
 
@@ -192,7 +208,163 @@ fun allChange (coins, _, 0) = [coins]
        amount 賬戶
     *)
     if amount < 0 then []
-      else allChange(c::coins, c::coinvals, amount - c) @
-        allChange(coins, coinvals, amount)
+      else allChange(c::coins, c::coinvals, amount - c) @ (* 用一個c *)
+        allChange(coins, coinvals, amount) (* 其他組合 *)
+
+(* 練習3.11 *)
+
+fun groupCons value [] = [(value, 1)]
+  | groupCons value ((y, n)::xs) =
+    if value = y then (value, n + 1)::xs
+    else (value, 1) :: (y, n) :: xs
+
+fun group [] = []
+  | group (x::xs) = groupCons x (group xs)
+
+fun repeatString s n =
+    if n <= 0 then ""
+    else String.concat (List.tabulate (n, fn _ => s))
+
+fun repeatChar c n =
+  repeatString (String.str c) n
+
+local fun tran n v1 v5 v10 =
+  let fun help 9 = v1 ^ v10
+    | help 5 = v5
+    | help 4 = v1 ^ v5
+    | help m =
+      if m > 9 then ""
+      else if m > 5 andalso m < 9 then v5 ^ repeatString v1 (m - 5)
+      else repeatString v1 m
+  in
+    help n
+  end
+in fun toRoman 1000 n =
+    if n > 3 then ""
+    else repeatString "M" n
+  | toRoman 100 n =
+    tran n "C" "D" "M"
+  | toRoman 10 n =
+    tran n "X" "L" "C"
+  | toRoman 1 n =
+    tran n "I" "V" "X"
+  | toRoman _ _ = ""
+end
+
+(* ---- toRoman 測試 ---- *)
+fun testToRoman () = (
+  check "toRoman 1000 0 = empty" (toRoman 1000 0 = "");
+  check "toRoman 1000 1 = M" (toRoman 1000 1 = "M");
+  check "toRoman 1000 3 = MMM" (toRoman 1000 3 = "MMM");
+  check "toRoman 1000 4 = empty" (toRoman 1000 4 = "");
+  check "toRoman 100 1 = C" (toRoman 100 1 = "C");
+  check "toRoman 100 4 = CD" (toRoman 100 4 = "CD");
+  check "toRoman 100 5 = D" (toRoman 100 5 = "D");
+  check "toRoman 100 8 = DCCC" (toRoman 100 8 = "DCCC");
+  check "toRoman 100 9 = CM" (toRoman 100 9 = "CM");
+  check "toRoman 10 4 = XL" (toRoman 10 4 = "XL");
+  check "toRoman 10 5 = L" (toRoman 10 5 = "L");
+  check "toRoman 10 8 = LXXX" (toRoman 10 8 = "LXXX");
+  check "toRoman 10 9 = XC" (toRoman 10 9 = "XC");
+  check "toRoman 1 0 = empty" (toRoman 1 0 = "");
+  check "toRoman 1 1 = I" (toRoman 1 1 = "I");
+  check "toRoman 1 3 = III" (toRoman 1 3 = "III");
+  check "toRoman 1 4 = IV" (toRoman 1 4 = "IV");
+  check "toRoman 1 5 = V" (toRoman 1 5 = "V");
+  check "toRoman 1 6 = VI" (toRoman 1 6 = "VI");
+  check "toRoman 1 8 = VIII" (toRoman 1 8 = "VIII");
+  check "toRoman 1 9 = IX" (toRoman 1 9 = "IX");
+  check "toRoman 5 1 = empty (invalid place)" (toRoman 5 1 = "")
+)
+
+val () = testToRoman ()
+
+fun numberToRoman amount =
+  let
+    val result =
+      List.map (fn (value, count) => toRoman value count)
+        (group (change ([1000, 100, 10, 1], amount)))
+  in
+    String.concat result
+  end
+
+fun testNumberToRoman () = (
+  check "4 = IV" (numberToRoman 4 = "IV");
+  check "9 = IX" (numberToRoman 9 = "IX");
+  check "40 = XL" (numberToRoman 40 = "XL");
+  check "1994 = MCMXCIV" (numberToRoman 1994 = "MCMXCIV");
+  check "2025 = MMXXV" (numberToRoman 2025 = "MMXXV");
+  check "3999 = MMMCMXCIX" (numberToRoman 3999 = "MMMCMXCIX");
+  check "0 = empty" (numberToRoman 0 = "")
+)
+
+val () = testNumberToRoman ()
+
+(* 練習3.12
+會跳過大額面值
+*)
+
+(* 練習3.13 *)
+
+fun allChangePurse (coins, _, 0) = [coins]
+  | allChangePurse (_, [], _) = []
+  | allChangePurse (coins, (c, n)::coinvals, amount) =
+    (* coins 已取硬幣列表
+       (c, n)::coinvals 可取硬幣對列表，c為幣值，n為數量
+       amount 賬戶
+    *)
+    if amount < 0 then []
+    else if n > 0 then allChangePurse(c::coins, (c, n - 1)::coinvals, amount - c) @ (* 用一個c *)
+      allChangePurse(coins, coinvals, amount) (* 其他組合 *)
+    else allChangePurse(coins, coinvals, amount) (* 其他組合 *)
+
+(* ---- allChangePurse 測試 ---- *)
+fun testAllChangePurse () = (
+  check "amount 0 = [[]]" (allChangePurse ([], [(1,1)], 0) = [[]]);
+  check "empty purse, amount 1 = []" (List.null (allChangePurse ([], [], 1)));
+  check "not enough coins (1x2, amount 3) = []"
+        (List.null (allChangePurse ([], [(1,2)], 3)));
+  check "exact two 2s = [[2,2]]"
+        (allChangePurse ([], [(2,2)], 4) = [[2,2]]);
+  check "negative amount = []"
+        (List.null (allChangePurse ([], [(1,1)], ~1)));
+
+  let val r = allChangePurse ([], [(1,3),(2,1)], 3) in
+    check "3 with (1x3,2x1) has 2 ways" (List.length r = 2);
+    check "3 includes 1+1+1" (List.exists (fn xs => xs = [1,1,1]) r);
+    check "3 includes 2+1" (List.exists (fn xs => xs = [2,1]) r)
+  end;
+
+  let val r = allChangePurse ([], [(1,5),(5,1)], 5) in
+    check "5 with (1x5,5x1) has 2 ways" (List.length r = 2);
+    check "5 includes 1+1+1+1+1" (List.exists (fn xs => xs = [1,1,1,1,1]) r);
+    check "5 includes 5" (List.exists (fn xs => xs = [5]) r)
+  end;
+
+  let val r = allChangePurse ([], [(1,3),(2,2)], 4) in
+    check "4 with (1x3,2x2) has 2 ways" (List.length r = 2);
+    check "4 includes 2+2" (List.exists (fn xs => xs = [2,2]) r);
+    check "4 includes 2+1+1" (List.exists (fn xs => xs = [2,1,1]) r)
+  end;
+
+  ()
+)
+
+val () = testAllChangePurse ()
+
+(* 練習3.14 *)
+
+(*
+fun allChangeAcc (coins, _, 0, result) = coins :: result
+  | allChangeAcc (_, [], _, result) = result
+  | allChangeAcc (coins, c::coinvals, amount, result) =
+    (* coins 已取硬幣列表
+       c::coinvals 可取硬幣列表
+       amount 賬戶
+    *)
+    if amount < 0 then []
+      else allChangeAcc(c::coins, c::coinvals, amount - c, result) @ (* 用一個c *)
+        allChangeAcc(coins, coinvals, amount, result) (* 其他組合 *)
+*)
 
 val () = Check.done ()

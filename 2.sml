@@ -59,10 +59,14 @@ fun subvec (v1, v2) = addvec (v1, negvec v2)
 fun distance pairv = lengthvec (subvec pairv)
 
 (* ---- 測試用例 ---- *)
-val () = check "31 January true"   (is_date (31, "January"))
-val () = check "31 April false"     (not (is_date (31, "April")))
-val () = check "29 February false"  (not (is_date (29, "February")))
-val () = check "0 March false"      (not (is_date (0, "March")))
+fun testIsDate () = (
+  check "31 January true"   (is_date (31, "January"));
+  check "31 April false"     (not (is_date (31, "April")));
+  check "29 February false"  (not (is_date (29, "February")));
+  check "0 March false"      (not (is_date (0, "March")));
+  ()
+)
+val () = testIsDate ()
 
 (* 練習2.6 *)
 
@@ -87,21 +91,25 @@ fun timeBefore a b =
   timeBeforeHelp (time12to24 a) (time12to24 b) 
 
 (* ---- timeBefore 測試 ---- *)
-val () = check "10:00AM < 11:00AM"          (timeBefore (10,0,"AM") (11,0,"AM"))
-val () = check "11:00AM < 10:00AM = false"  (not (timeBefore (11,0,"AM") (10,0,"AM")))
-val () = check "10:30AM < 10:45AM"          (timeBefore (10,30,"AM") (10,45,"AM"))
-val () = check "10:45AM < 10:30AM = false"  (not (timeBefore (10,45,"AM") (10,30,"AM")))
-val () = check "10:30AM < 10:30AM = false"  (not (timeBefore (10,30,"AM") (10,30,"AM")))
-val () = check "11:59AM < 12:00PM"          (timeBefore (11,59,"AM") (12,0,"PM"))
-val () = check "1:00PM < 1:00AM = false"    (not (timeBefore (1,0,"PM") (1,0,"AM")))
-val () = check "11:59PM < 12:00AM = false"  (not (timeBefore (11,59,"PM") (12,0,"AM")))
-val () = check "12:00AM < 12:00PM"          (timeBefore (12,0,"AM") (12,0,"PM"))
-val () = check "12:00PM < 12:00AM = false"  (not (timeBefore (12,0,"PM") (12,0,"AM")))
-val () = check "12:30AM < 1:00AM"           (timeBefore (12,30,"AM") (1,0,"AM"))
-val () = check "12:30PM < 1:00PM"           (timeBefore (12,30,"PM") (1,0,"PM"))
-val () = check "12:00PM < 11:59PM"          (timeBefore (12,0,"PM") (11,59,"PM"))
-val () = check "1:00PM < 12:30PM = false"   (not (timeBefore (1,0,"PM") (12,30,"PM")))
-val () = check "12:00AM < 12:01AM"          (timeBefore (12,0,"AM") (12,1,"AM"))
+fun testTimeBefore () = (
+  check "10:00AM < 11:00AM"          (timeBefore (10,0,"AM") (11,0,"AM"));
+  check "11:00AM < 10:00AM = false"  (not (timeBefore (11,0,"AM") (10,0,"AM")));
+  check "10:30AM < 10:45AM"          (timeBefore (10,30,"AM") (10,45,"AM"));
+  check "10:45AM < 10:30AM = false"  (not (timeBefore (10,45,"AM") (10,30,"AM")));
+  check "10:30AM < 10:30AM = false"  (not (timeBefore (10,30,"AM") (10,30,"AM")));
+  check "11:59AM < 12:00PM"          (timeBefore (11,59,"AM") (12,0,"PM"));
+  check "1:00PM < 1:00AM = false"    (not (timeBefore (1,0,"PM") (1,0,"AM")));
+  check "11:59PM < 12:00AM = false"  (not (timeBefore (11,59,"PM") (12,0,"AM")));
+  check "12:00AM < 12:00PM"          (timeBefore (12,0,"AM") (12,0,"PM"));
+  check "12:00PM < 12:00AM = false"  (not (timeBefore (12,0,"PM") (12,0,"AM")));
+  check "12:30AM < 1:00AM"           (timeBefore (12,30,"AM") (1,0,"AM"));
+  check "12:30PM < 1:00PM"           (timeBefore (12,30,"PM") (1,0,"PM"));
+  check "12:00PM < 11:59PM"          (timeBefore (12,0,"PM") (11,59,"PM"));
+  check "1:00PM < 12:30PM = false"   (not (timeBefore (1,0,"PM") (12,30,"PM")));
+  check "12:00AM < 12:01AM"          (timeBefore (12,0,"AM") (12,1,"AM"));
+  ()
+)
+val () = testTimeBefore ()
 
 (* 練習2.7 *)
 
@@ -120,36 +128,40 @@ fun moneyMinus a b :money =
   ofPence (toPence a - toPence b)
 
 (* ---- moneyPlus / moneyMinus 測試 ---- *)
-val () = check "moneyPlus (1,2,3) (4,5,6) = (5,7,9)"
-                (moneyPlus (1,2,3) (4,5,6) = (5,7,9))
-val () = check "moneyPlus (0,0,11) (0,0,1) = (0,1,0)"
-                (moneyPlus (0,0,11) (0,0,1) = (0,1,0))
-val () = check "moneyPlus (0,19,11) (0,0,1) = (1,0,0)"
-                (moneyPlus (0,19,11) (0,0,1) = (1,0,0))
-val () = check "moneyPlus (0,19,0) (0,2,0) = (1,1,0)"
-                (moneyPlus (0,19,0) (0,2,0) = (1,1,0))
-val () = check "moneyPlus (0,0,0) (0,0,0) = (0,0,0)"
-                (moneyPlus (0,0,0) (0,0,0) = (0,0,0))
-val () = check "moneyPlus (10,10,10) (20,15,5) = (31,6,3)"
-                (moneyPlus (10,10,10) (20,15,5) = (31,6,3))
+fun testMoney () = (
+  check "moneyPlus (1,2,3) (4,5,6) = (5,7,9)"
+                  (moneyPlus (1,2,3) (4,5,6) = (5,7,9));
+  check "moneyPlus (0,0,11) (0,0,1) = (0,1,0)"
+                  (moneyPlus (0,0,11) (0,0,1) = (0,1,0));
+  check "moneyPlus (0,19,11) (0,0,1) = (1,0,0)"
+                  (moneyPlus (0,19,11) (0,0,1) = (1,0,0));
+  check "moneyPlus (0,19,0) (0,2,0) = (1,1,0)"
+                  (moneyPlus (0,19,0) (0,2,0) = (1,1,0));
+  check "moneyPlus (0,0,0) (0,0,0) = (0,0,0)"
+                  (moneyPlus (0,0,0) (0,0,0) = (0,0,0));
+  check "moneyPlus (10,10,10) (20,15,5) = (31,6,3)"
+                  (moneyPlus (10,10,10) (20,15,5) = (31,6,3));
 
-val () = check "moneyMinus (5,7,9) (4,5,6) = (1,2,3)"
-                (moneyMinus (5,7,9) (4,5,6) = (1,2,3))
-val () = check "moneyMinus (1,0,0) (0,0,1) = (0,19,11)"
-                (moneyMinus (1,0,0) (0,0,1) = (0,19,11))
-val () = check "moneyMinus (0,1,0) (0,0,1) = (0,0,11)"
-                (moneyMinus (0,1,0) (0,0,1) = (0,0,11))
-val () = check "moneyMinus (1,0,0) (1,0,0) = (0,0,0)"
-                (moneyMinus (1,0,0) (1,0,0) = (0,0,0))
-val () = check "moneyMinus (2,0,0) (1,19,11) = (0,0,1)"
-                (moneyMinus (2,0,0) (1,19,11) = (0,0,1))
-val () = check "moneyMinus (10,10,10) (5,5,5) = (5,5,5)"
-                (moneyMinus (10,10,10) (5,5,5) = (5,5,5))
+  check "moneyMinus (5,7,9) (4,5,6) = (1,2,3)"
+                  (moneyMinus (5,7,9) (4,5,6) = (1,2,3));
+  check "moneyMinus (1,0,0) (0,0,1) = (0,19,11)"
+                  (moneyMinus (1,0,0) (0,0,1) = (0,19,11));
+  check "moneyMinus (0,1,0) (0,0,1) = (0,0,11)"
+                  (moneyMinus (0,1,0) (0,0,1) = (0,0,11));
+  check "moneyMinus (1,0,0) (1,0,0) = (0,0,0)"
+                  (moneyMinus (1,0,0) (1,0,0) = (0,0,0));
+  check "moneyMinus (2,0,0) (1,19,11) = (0,0,1)"
+                  (moneyMinus (2,0,0) (1,19,11) = (0,0,1));
+  check "moneyMinus (10,10,10) (5,5,5) = (5,5,5)"
+                  (moneyMinus (10,10,10) (5,5,5) = (5,5,5));
 
-val () = check "toPence/ofPence roundtrip (1,2,3)"
-                (ofPence (toPence (1,2,3)) = (1,2,3))
-val () = check "toPence/ofPence roundtrip (0,19,11)"
-                (ofPence (toPence (0,19,11)) = (0,19,11))
+  check "toPence/ofPence roundtrip (1,2,3)"
+                  (ofPence (toPence (1,2,3)) = (1,2,3));
+  check "toPence/ofPence roundtrip (0,19,11)"
+                  (ofPence (toPence (0,19,11)) = (0,19,11));
+  ()
+)
+val () = testMoney ()
 
 (* 2.9 紀錄 *)
 
@@ -188,17 +200,25 @@ infix xor
 
 fun (p xor q) = (p orelse q) andalso not (p andalso q)
 
-val () = check "(true xor false) = true" (true xor false)
-val () = check "(false xor true) = true" (false xor true)
-val () = check "(true xor true) = false" (not (true xor true))
-val () = check "(false xor false) = false" (not (false xor false))
+fun testXor () = (
+  check "(true xor false) = true" (true xor false);
+  check "(false xor true) = true" (false xor true);
+  check "(true xor true) = false" (not (true xor true));
+  check "(false xor false) = false" (not (false xor false));
+  ()
+)
+val () = testXor ()
 
 fun even n = n mod 2 = 0
 
 fun powoftwo n =
   (n = 1) orelse ((even n) andalso powoftwo (n div 2))
 
-val () = check "(powoftwo 6) = false" (not (powoftwo 6))
+fun testPowoftwo6 () = (
+  check "(powoftwo 6) = false" (not (powoftwo 6));
+  ()
+)
+val () = testPowoftwo6 ()
 
 (* 練習2.10
 powoftwo 8 => (8 = 1) orelse ((even 8) andalso powoftwo (8 div 2))
@@ -214,7 +234,11 @@ powoftwo 8 => (8 = 1) orelse ((even 8) andalso powoftwo (8 div 2))
            => true
 *)
 
-val () = check "(powoftwo 8) = false" (powoftwo 8)
+fun testPowoftwo8 () = (
+  check "(powoftwo 8) = false" (powoftwo 8);
+  ()
+)
+val () = testPowoftwo8 ()
 
 (* 練習2.11
 是，powoftwo的調用就是返回值
@@ -304,7 +328,11 @@ fun introot n =
   if n = 0 then 0
   else increase(2 * introot(n div 4), n)
 
-val () = check "introot(123456789) = 11111" (introot 123456789 = 11111)
+fun testIntroot () = (
+  check "introot(123456789) = 11111" (introot 123456789 = 11111);
+  ()
+)
+val () = testIntroot ()
 
 (* 練習2.18
 *)
@@ -334,52 +362,56 @@ fun gcd (m, n) =
 (* ---- gcd 測試 ---- *)
 
 (* 基本：1、互質、相等 *)
-val () = check "gcd(1,1) = 1"           (gcd (1,1) = 1)
-val () = check "gcd(1,5) = 1"           (gcd (1,5) = 1)
-val () = check "gcd(5,1) = 1"           (gcd (5,1) = 1)
-val () = check "gcd(17,5) = 1"          (gcd (17,5) = 1)
-val () = check "gcd(2,3) = 1"           (gcd (2,3) = 1)
-val () = check "gcd(3,2) = 1"           (gcd (3,2) = 1)
-val () = check "gcd(999,1001) = 1"      (gcd (999,1001) = 1)
-val () = check "gcd(2,2) = 2"           (gcd (2,2) = 2)
-val () = check "gcd(17,17) = 17"        (gcd (17,17) = 17)
+fun testGcd () = (
+  check "gcd(1,1) = 1"           (gcd (1,1) = 1);
+  check "gcd(1,5) = 1"           (gcd (1,5) = 1);
+  check "gcd(5,1) = 1"           (gcd (5,1) = 1);
+  check "gcd(17,5) = 1"          (gcd (17,5) = 1);
+  check "gcd(2,3) = 1"           (gcd (2,3) = 1);
+  check "gcd(3,2) = 1"           (gcd (3,2) = 1);
+  check "gcd(999,1001) = 1"      (gcd (999,1001) = 1);
+  check "gcd(2,2) = 2"           (gcd (2,2) = 2);
+  check "gcd(17,17) = 17"        (gcd (17,17) = 17);
 
-(* 對稱性：gcd(a,b) = gcd(b,a) *)
-val () = check "gcd(6,8) = 2"           (gcd (6,8) = 2)
-val () = check "gcd(8,6) = 2"           (gcd (8,6) = 2)
-val () = check "gcd(12,18) = 6"         (gcd (12,18) = 6)
-val () = check "gcd(18,12) = 6"         (gcd (18,12) = 6)
-val () = check "gcd(34,17) = 17"        (gcd (34,17) = 17)
-val () = check "gcd(17,34) = 17"        (gcd (17,34) = 17)
+  (* 對稱性：gcd(a,b) = gcd(b,a) *)
+  check "gcd(6,8) = 2"           (gcd (6,8) = 2);
+  check "gcd(8,6) = 2"           (gcd (8,6) = 2);
+  check "gcd(12,18) = 6"         (gcd (12,18) = 6);
+  check "gcd(18,12) = 6"         (gcd (18,12) = 6);
+  check "gcd(34,17) = 17"        (gcd (34,17) = 17);
+  check "gcd(17,34) = 17"        (gcd (17,34) = 17);
 
-(* 四種奇偶組合 *)
-val () = check "gcd(2,4) = 2"           (gcd (2,4) = 2)
-val () = check "gcd(4,6) = 2"           (gcd (4,6) = 2)
-val () = check "gcd(15,25) = 5"         (gcd (15,25) = 5)
-val () = check "gcd(49,14) = 7"         (gcd (49,14) = 7)
-val () = check "gcd(36,60) = 12"        (gcd (36,60) = 12)
-val () = check "gcd(100,75) = 25"       (gcd (100,75) = 25)
-val () = check "gcd(270,192) = 6"       (gcd (270,192) = 6)
+  (* 四種奇偶組合 *)
+  check "gcd(2,4) = 2"           (gcd (2,4) = 2);
+  check "gcd(4,6) = 2"           (gcd (4,6) = 2);
+  check "gcd(15,25) = 5"         (gcd (15,25) = 5);
+  check "gcd(49,14) = 7"         (gcd (49,14) = 7);
+  check "gcd(36,60) = 12"        (gcd (36,60) = 12);
+  check "gcd(100,75) = 25"       (gcd (100,75) = 25);
+  check "gcd(270,192) = 6"       (gcd (270,192) = 6);
 
-(* 2 的冪 *)
-val () = check "gcd(8,32) = 8"          (gcd (8,32) = 8)
-val () = check "gcd(1024,2048) = 1024"  (gcd (1024,2048) = 1024)
+  (* 2 的冪 *)
+  check "gcd(8,32) = 8"          (gcd (8,32) = 8);
+  check "gcd(1024,2048) = 1024"  (gcd (1024,2048) = 1024);
 
-(* 較大的數 / 倍數 *)
-val () = check "gcd(45,30) = 15"        (gcd (45,30) = 15)
-val () = check "gcd(48,180) = 12"       (gcd (48,180) = 12)
-val () = check "gcd(91,77) = 7"         (gcd (91,77) = 7)
-val () = check "gcd(1071,462) = 21"     (gcd (1071,462) = 21)
-val () = check "gcd(123456,7890) = 6"   (gcd (123456,7890) = 6)
+  (* 較大的數 / 倍數 *)
+  check "gcd(45,30) = 15"        (gcd (45,30) = 15);
+  check "gcd(48,180) = 12"       (gcd (48,180) = 12);
+  check "gcd(91,77) = 7"         (gcd (91,77) = 7);
+  check "gcd(1071,462) = 21"     (gcd (1071,462) = 21);
+  check "gcd(123456,7890) = 6"   (gcd (123456,7890) = 6);
 
-(* 縮放性質：gcd(ka,kb) = k * gcd(a,b) *)
-val () = check "gcd(6,10) = 2"          (gcd (6,10) = 2)
-val () = check "gcd(12,20) = 4"         (gcd (12,20) = 4)
+  (* 縮放性質：gcd(ka,kb) = k * gcd(a,b) *)
+  check "gcd(6,10) = 2"          (gcd (6,10) = 2);
+  check "gcd(12,20) = 4"         (gcd (12,20) = 4);
 
-(* 0,0 的約定 *)
-val () = check "gcd(0,0) = 0"           (gcd (0,0) = 0)
-val () = check "gcd(0,5) = 5"           (gcd (0,5) = 5)
-val () = check "gcd(5,0) = 5"           (gcd (5,0) = 5)
+  (* 0,0 的約定 *)
+  check "gcd(0,0) = 0"           (gcd (0,0) = 0);
+  check "gcd(0,5) = 5"           (gcd (0,5) = 5);
+  check "gcd(5,0) = 5"           (gcd (5,0) = 5);
+  ()
+)
+val () = testGcd ()
 
 fun fraction (n, d) =
   let val com = gcd(n, d) in
@@ -451,42 +483,46 @@ end
 
 (* ---- RealArith 測試 ---- *)
 (* real 不是 equality type，所以用 Basis 的 Real.== 做精確比較 *)
-val () = check "RealArith.zero = 0.0"
-                (Real.== (RealArith.zero, 0.0))
-val () = check "RealArith.sum (1.5, 2.25) = 3.75"
-                (Real.== (RealArith.sum (1.5, 2.25), 3.75))
-val () = check "RealArith.diff (5.0, 2.5) = 2.5"
-                (Real.== (RealArith.diff (5.0, 2.5), 2.5))
-val () = check "RealArith.prod (2.5, 4.0) = 10.0"
-                (Real.== (RealArith.prod (2.5, 4.0), 10.0))
-val () = check "RealArith.quo (7.5, 2.5) = 3.0"
-                (Real.== (RealArith.quo (7.5, 2.5), 3.0))
+fun testRealArith () = (
+  check "RealArith.zero = 0.0"
+                  (Real.== (RealArith.zero, 0.0));
+  check "RealArith.sum (1.5, 2.25) = 3.75"
+                  (Real.== (RealArith.sum (1.5, 2.25), 3.75));
+  check "RealArith.diff (5.0, 2.5) = 2.5"
+                  (Real.== (RealArith.diff (5.0, 2.5), 2.5));
+  check "RealArith.prod (2.5, 4.0) = 10.0"
+                  (Real.== (RealArith.prod (2.5, 4.0), 10.0));
+  check "RealArith.quo (7.5, 2.5) = 3.0"
+                  (Real.== (RealArith.quo (7.5, 2.5), 3.0));
 
-val () = check "RealArith.sum (~1.5, 2.0) = 0.5"
-                (Real.== (RealArith.sum (~1.5, 2.0), 0.5))
-val () = check "RealArith.diff (2.0, 5.0) = ~3.0"
-                (Real.== (RealArith.diff (2.0, 5.0), ~3.0))
-val () = check "RealArith.prod (~2.0, 3.0) = ~6.0"
-                (Real.== (RealArith.prod (~2.0, 3.0), ~6.0))
-val () = check "RealArith.quo (~7.0, 2.0) = ~3.5"
-                (Real.== (RealArith.quo (~7.0, 2.0), ~3.5))
-val () = check "RealArith.quo (1.0, 4.0) = 0.25"
-                (Real.== (RealArith.quo (1.0, 4.0), 0.25))
+  check "RealArith.sum (~1.5, 2.0) = 0.5"
+                  (Real.== (RealArith.sum (~1.5, 2.0), 0.5));
+  check "RealArith.diff (2.0, 5.0) = ~3.0"
+                  (Real.== (RealArith.diff (2.0, 5.0), ~3.0));
+  check "RealArith.prod (~2.0, 3.0) = ~6.0"
+                  (Real.== (RealArith.prod (~2.0, 3.0), ~6.0));
+  check "RealArith.quo (~7.0, 2.0) = ~3.5"
+                  (Real.== (RealArith.quo (~7.0, 2.0), ~3.5));
+  check "RealArith.quo (1.0, 4.0) = 0.25"
+                  (Real.== (RealArith.quo (1.0, 4.0), 0.25));
 
-val () = check "RealArith.sum (3.25, zero) = 3.25"
-                (Real.== (RealArith.sum (3.25, RealArith.zero), 3.25))
-val () = check "RealArith.diff (3.25, 3.25) = 0.0"
-                (Real.== (RealArith.diff (3.25, 3.25), 0.0))
-val () = check "RealArith.prod (3.25, zero) = 0.0"
-                (Real.== (RealArith.prod (3.25, RealArith.zero), 0.0))
-val () = check "RealArith.quo (3.25, 3.25) = 1.0"
-                (Real.== (RealArith.quo (3.25, 3.25), 1.0))
+  check "RealArith.sum (3.25, zero) = 3.25"
+                  (Real.== (RealArith.sum (3.25, RealArith.zero), 3.25));
+  check "RealArith.diff (3.25, 3.25) = 0.0"
+                  (Real.== (RealArith.diff (3.25, 3.25), 0.0));
+  check "RealArith.prod (3.25, zero) = 0.0"
+                  (Real.== (RealArith.prod (3.25, RealArith.zero), 0.0));
+  check "RealArith.quo (3.25, 3.25) = 1.0"
+                  (Real.== (RealArith.quo (3.25, 3.25), 1.0));
 
-val () = check "RealArith.prod (1.5, sum (2.0, 3.0)) = 7.5"
-                (Real.== (RealArith.prod (1.5, RealArith.sum (2.0, 3.0)), 7.5))
-val () = check "RealArith.sum (prod (1.5, 2.0), prod (1.5, 3.0)) = 7.5"
-                (Real.== (RealArith.sum (RealArith.prod (1.5, 2.0),
-                                          RealArith.prod (1.5, 3.0)), 7.5))
+  check "RealArith.prod (1.5, sum (2.0, 3.0)) = 7.5"
+                  (Real.== (RealArith.prod (1.5, RealArith.sum (2.0, 3.0)), 7.5));
+  check "RealArith.sum (prod (1.5, 2.0), prod (1.5, 3.0)) = 7.5"
+                  (Real.== (RealArith.sum (RealArith.prod (1.5, 2.0),
+                                            RealArith.prod (1.5, 3.0)), 7.5));
+  ()
+)
+val () = testRealArith ()
 
 (* 練習2.25
 *)
@@ -529,69 +565,73 @@ structure Rational : ARITH = struct
 end
 
 (* ---- Rational 測試 ---- *)
-val () = check "Rational.zero = (0,1)"
-                (Rational.zero = (0,1))
+fun testRational () = (
+  check "Rational.zero = (0,1)"
+                  (Rational.zero = (0,1));
 
-(* 加法 *)
-val () = check "1/2 + 1/3 = 5/6"
-                (Rational.sum ((1,2),(1,3)) = (5,6))
-val () = check "1/2 + 1/2 = 1/1"
-                (Rational.sum ((1,2),(1,2)) = (1,1))
-val () = check "1/3 + 1/6 = 1/2"
-                (Rational.sum ((1,3),(1,6)) = (1,2))
-val () = check "2/3 + 1/6 = 5/6"
-                (Rational.sum ((2,3),(1,6)) = (5,6))
-val () = check "1/2 + 2/3 = 7/6"
-                (Rational.sum ((1,2),(2,3)) = (7,6))
-val () = check "3/5 + zero = 3/5"
-                (Rational.sum ((3,5), Rational.zero) = (3,5))
+  (* 加法 *)
+  check "1/2 + 1/3 = 5/6"
+                  (Rational.sum ((1,2),(1,3)) = (5,6));
+  check "1/2 + 1/2 = 1/1"
+                  (Rational.sum ((1,2),(1,2)) = (1,1));
+  check "1/3 + 1/6 = 1/2"
+                  (Rational.sum ((1,3),(1,6)) = (1,2));
+  check "2/3 + 1/6 = 5/6"
+                  (Rational.sum ((2,3),(1,6)) = (5,6));
+  check "1/2 + 2/3 = 7/6"
+                  (Rational.sum ((1,2),(2,3)) = (7,6));
+  check "3/5 + zero = 3/5"
+                  (Rational.sum ((3,5), Rational.zero) = (3,5));
 
-(* 減法（結果為正） *)
-val () = check "3/4 - 1/4 = 1/2"
-                (Rational.diff ((3,4),(1,4)) = (1,2))
-val () = check "5/6 - 1/3 = 1/2"
-                (Rational.diff ((5,6),(1,3)) = (1,2))
-val () = check "7/8 - 1/8 = 3/4"
-                (Rational.diff ((7,8),(1,8)) = (3,4))
-val () = check "3/5 - zero = 3/5"
-                (Rational.diff ((3,5), Rational.zero) = (3,5))
+  (* 減法（結果為正） *)
+  check "3/4 - 1/4 = 1/2"
+                  (Rational.diff ((3,4),(1,4)) = (1,2));
+  check "5/6 - 1/3 = 1/2"
+                  (Rational.diff ((5,6),(1,3)) = (1,2));
+  check "7/8 - 1/8 = 3/4"
+                  (Rational.diff ((7,8),(1,8)) = (3,4));
+  check "3/5 - zero = 3/5"
+                  (Rational.diff ((3,5), Rational.zero) = (3,5));
 
-(* 乘法 *)
-val () = check "1/2 * 2/3 = 1/3"
-                (Rational.prod ((1,2),(2,3)) = (1,3))
-val () = check "3/4 * 2/5 = 3/10"
-                (Rational.prod ((3,4),(2,5)) = (3,10))
-val () = check "2/3 * 3/4 = 1/2"
-                (Rational.prod ((2,3),(3,4)) = (1,2))
-val () = check "3/5 * 1/1 = 3/5"
-                (Rational.prod ((3,5),(1,1)) = (3,5))
+  (* 乘法 *)
+  check "1/2 * 2/3 = 1/3"
+                  (Rational.prod ((1,2),(2,3)) = (1,3));
+  check "3/4 * 2/5 = 3/10"
+                  (Rational.prod ((3,4),(2,5)) = (3,10));
+  check "2/3 * 3/4 = 1/2"
+                  (Rational.prod ((2,3),(3,4)) = (1,2));
+  check "3/5 * 1/1 = 3/5"
+                  (Rational.prod ((3,5),(1,1)) = (3,5));
 
-(* 除法 *)
-val () = check "(1/2) / (3/4) = 2/3"
-                (Rational.quo ((1,2),(3,4)) = (2,3))
-val () = check "(3/4) / (1/2) = 3/2"
-                (Rational.quo ((3,4),(1,2)) = (3,2))
-val () = check "(2/3) / (2/3) = 1/1"
-                (Rational.quo ((2,3),(2,3)) = (1,1))
-val () = check "(3/5) / (1/1) = 3/5"
-                (Rational.quo ((3,5),(1,1)) = (3,5))
+  (* 除法 *)
+  check "(1/2) / (3/4) = 2/3"
+                  (Rational.quo ((1,2),(3,4)) = (2,3));
+  check "(3/4) / (1/2) = 3/2"
+                  (Rational.quo ((3,4),(1,2)) = (3,2));
+  check "(2/3) / (2/3) = 1/1"
+                  (Rational.quo ((2,3),(2,3)) = (1,1));
+  check "(3/5) / (1/1) = 3/5"
+                  (Rational.quo ((3,5),(1,1)) = (3,5));
 
-(* 化簡 *)
-val () = check "2/4 simplifies to 1/2"
-                (Rational.prod ((2,4),(1,1)) = (1,2))
-val () = check "6/8 simplifies to 3/4"
-                (Rational.sum ((6,8), Rational.zero) = (3,4))
+  (* 化簡 *)
+  check "2/4 simplifies to 1/2"
+                  (Rational.prod ((2,4),(1,1)) = (1,2));
+  check "6/8 simplifies to 3/4"
+                  (Rational.sum ((6,8), Rational.zero) = (3,4));
 
-(* 代數性質 *)
-val () = check "x + y = y + x"
-                (Rational.sum ((1,3),(2,5)) = Rational.sum ((2,5),(1,3)))
-val () = check "(x*y)*z = x*(y*z)"
-                (Rational.prod (Rational.prod ((1,2),(2,3)), (3,4)) =
-                 Rational.prod ((1,2), Rational.prod ((2,3),(3,4))))
-val () = check "x*(y+z) = x*y + x*z"
-                (Rational.prod ((1,2), Rational.sum ((1,3),(1,4))) =
-                 Rational.sum (Rational.prod ((1,2),(1,3)),
-                               Rational.prod ((1,2),(1,4))))
+  (* 代數性質 *)
+  check "x + y = y + x"
+                  (Rational.sum ((1,3),(2,5)) = Rational.sum ((2,5),(1,3)));
+  check "(x*y)*z = x*(y*z)"
+                  (Rational.prod (Rational.prod ((1,2),(2,3)), (3,4)) =
+                   Rational.prod ((1,2), Rational.prod ((2,3),(3,4))));
+  check "x*(y+z) = x*y + x*z"
+                  (Rational.prod ((1,2), Rational.sum ((1,3),(1,4))) =
+                   Rational.sum (Rational.prod ((1,2),(1,3)),
+                                 Rational.prod ((1,2),(1,4))));
+  ()
+)
+val () = testRational ()
 
 (* 練習2.26
 1是int -> n是int -> curr是int -> itfib (n - 1, curr, prev + curr)是int -> prev是int

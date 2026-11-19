@@ -4,18 +4,26 @@ structure Check = struct
   val verbose = ref false
 
   val failures = ref 0
+  val checks   = ref 0
 
-  fun check name ok =
+  fun check name ok = (
+    checks := !checks + 1;
     if ok then
       (if !verbose then print ("PASS " ^ name ^ "\n") else ())
     else (
       failures := !failures + 1;
       print ("FAIL " ^ name ^ "\n")
     )
+  )
 
-  fun reset () = failures := 0
+  fun reset () = (failures := 0; checks := 0)
 
   fun done () =
-    if !failures = 0 then ()
-    else OS.Process.exit OS.Process.failure
+    if !failures = 0 then
+      print ("ALL TESTS PASSED (" ^ Int.toString (!checks) ^ " checks)\n")
+    else (
+      print ("FAILED: " ^ Int.toString (!failures) ^ " of "
+             ^ Int.toString (!checks) ^ " checks\n");
+      OS.Process.exit OS.Process.failure
+    )
 end
