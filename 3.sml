@@ -194,6 +194,8 @@ fun zip(x::xs, y::ys) = (x, y)::zip(xs, ys)
 和i的位置有關
 *)
 
+(* 3.7 找零錢 *)
+
 fun change (_, 0) = []
   | change ([], _) = []
   | change (c::coinvals, amount) = (* c是硬幣值，amount是當前錢數 *)
@@ -354,17 +356,119 @@ val () = testAllChangePurse ()
 
 (* 練習3.14 *)
 
-(*
-fun allChangeAcc (coins, _, 0, result) = coins :: result
-  | allChangeAcc (_, [], _, result) = result
-  | allChangeAcc (coins, c::coinvals, amount, result) =
+fun allChangeAcc (coins, _, 0, acc) = coins :: acc
+  | allChangeAcc (_, [], _, acc) = acc
+  | allChangeAcc (coins, c::coinvals, amount, acc) =
     (* coins 已取硬幣列表
        c::coinvals 可取硬幣列表
        amount 賬戶
     *)
-    if amount < 0 then []
-      else allChangeAcc(c::coins, c::coinvals, amount - c, result) @ (* 用一個c *)
-        allChangeAcc(coins, coinvals, amount, result) (* 其他組合 *)
+    if amount < 0 then acc
+      else allChangeAcc(coins, coinvals, amount, allChangeAcc(c::coins, c::coinvals, amount - c, acc))
+
+(* ---- allChangeAcc 測試 ---- *)
+fun testAllChangeAcc () = (
+  check "amount 0 = [[]]" (allChangeAcc ([], [1], 0, []) = [[]]);
+  check "empty coinvals = []" (List.null (allChangeAcc ([], [], 5, [])));
+  check "no solution (2, amount 3) = []"
+        (List.null (allChangeAcc ([], [2], 3, [])));
+  check "only 1s: [1],3 = [[1,1,1]]"
+        (allChangeAcc ([], [1], 3, []) = [[1,1,1]]);
+
+  check "1,2 amount 3 = [[2,1],[1,1,1]]"
+        (allChangeAcc ([], [1,2], 3, []) = [[2,1],[1,1,1]]);
+  check "rev matches naive allChange (1,2; 3)"
+        (List.rev (allChangeAcc ([], [1,2], 3, [])) = allChange ([], [1,2], 3));
+  check "1,2,5 amount 5 has 4 solutions"
+        (List.length (allChangeAcc ([], [1,2,5], 5, [])) = 4);
+  check "rev matches naive allChange (1,2,5; 5)"
+        (List.rev (allChangeAcc ([], [1,2,5], 5, [])) = allChange ([], [1,2,5], 5));
+
+  check "negative amount keeps acc"
+        (allChangeAcc ([], [1], ~1, [[9]]) = [[9]]);
+  check "amount 0 conses onto acc"
+        (allChangeAcc ([], [1], 0, [[9]]) = [[],[9]]);
+  check "chosen coins kept"
+        (allChangeAcc ([1,2], [1], 0, []) = [[1,2]]);
+  check "initial acc preserved"
+        (allChangeAcc ([], [1], 1, [[9]]) = [[1],[9]]);
+  ()
+)
+
+val () = testAllChangeAcc ()
+
+(* 3.8 二進制算術 *)
+
+fun bincarry (0, ps) = ps
+  | bincarry (1, []) = [1]
+  (* | bincarry (1, p::ps) = (1 - p) :: bincarry(p, ps) *)
+  | bincarry (1, p::ps) =
+    let
+      val s = p + 1
+    in
+      (s mod 2) :: bincarry (s div 2, ps) (* 向右進位 *)
+    end
+  | bincarry _ = raise (Fail "bincarry bad arg")
+
+fun binsum (c, [], qs) = bincarry (c, qs)
+  | binsum (c, ps, []) = bincarry (c, ps)
+  | binsum (c, p::ps, q::qs) =
+    let
+      val s = c + p + q
+    in
+      (s mod 2) :: binsum(s div 2, ps, qs)
+    end
+
+fun binprod ([], _) = []
+  | binprod (0::ps, qs) = 0::binprod(ps, qs) (* 直接後面加0 *)
+  | binprod (1::ps, qs) = binsum(0, qs, 0::binprod(ps, qs)) (* 移位加 *)
+  | binprod _ = raise (Fail "binprod bad arg")
+
+structure Bin = struct
+  fun carry (q, p) = bincarry(q, p)
+  fun sum (c, q, p) = binsum(c, q, p)
+  fun prod (q, p) = binprod(q, p)
+end
+
+(* 先跳過 *)
+
+(* 3.9 矩陣的轉置 *)
+
+val matrix =
+  [ ["a", "b", "c"],
+    ["d", "e", "f"] ]
+
+fun headcol [] = []
+  | headcol ((x::_) :: rows) = x :: headcol rows
+  | headcol _ = raise (Fail "invalid argument")
+
+fun tailcol [] = []
+  | tailcol ((_::xs) :: rows) = xs :: tailcol rows
+  | tailcol _ = raise (Fail "invalid argument")
+
+fun transp ([]::_) = []
+  | transp rows = headcol rows :: transp (tailcol rows)
+
+(* 練習 3.19
+有空位處理不了
 *)
+
+(* 練習 3.20
+報異常
+*)
+
+(* 先跳過 *)
+
+(* 3.10 矩陣乘法 *)
+
+(* 先跳過 *)
+
+(* 3.11 高斯消元法 *)
+
+(* 先跳過 *)
+
+(* 3.12 分解一個數為兩個平方數之和 *)
+
+(* 3.13 求後繼排列的問題 *)
 
 val () = Check.done ()
