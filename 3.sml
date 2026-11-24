@@ -471,4 +471,96 @@ fun transp ([]::_) = []
 
 (* 3.13 求後繼排列的問題 *)
 
+(* 先跳過 *)
+
+(* 3.14 相等類型 *)
+
+infix mem
+
+fun (_ mem []) = false
+  | (x mem (y::l)) = (x = y) orelse (x mem l)
+
+(* 3.15 多態集合操作 *)
+
+fun newmem (x, xs) =
+  if x mem xs then xs else x::xs
+
+fun setof [] = []
+  | setof (x::xs) = newmem(x, setof xs)
+
+fun union ([], ys) = ys
+  | union (x::xs, ys) = newmem(x, union(xs, ys))
+
+fun inter ([], _) = []
+  | inter (x::xs, ys) =
+    if x mem ys then x::inter(xs, ys)
+    else inter(xs, ys)
+
+infix subs
+
+fun ([] subs _) = true
+  | ((x::xs) subs ys) = (x mem ys) andalso (xs subs ys)
+
+infix seq
+
+fun (xs seq ys) = (xs subs ys) andalso (ys subs xs)
+
+fun powset ([], base) = [base]
+  | powset (x::xs, base) =
+      powset(xs, base) @ powset(xs, x::base)
+
+fun cartprod ([], _) = []
+  | cartprod (x::xs, ys) =
+      let val xsprod = cartprod(xs, ys)
+          fun pairx [] = xsprod
+            | pairx (y::ytail) = (x, y) :: (pairx ytail)
+      in pairx ys end
+
+(* 3.16 關聯表 *)
+
+fun assoc ([], _) = []
+  | assoc ((x, y)::pairs, a) =
+      if a = x then [y]
+      else assoc(pairs, a)
+
+(* 3.17 圖的算法 *)
+
+(* 3.18 隨機數 *)
+
+local
+  val a = 16807.0 and m = 2147483647.0
+in fun nextrand seed =
+  let val t = a * seed
+  in t - m * real(floor(t / m)) end
+end
+
+fun randlist (n, seed, tail) =
+  if n = 0 then (seed, tail)
+  else randlist(n - 1, nextrand seed, seed::tail)
+
+val (seed, rs) = randlist(10000, 1.0, [])
+
+(* 3.19 插入排序 *)
+
+fun ins (x, []) : real list = [x]
+  | ins (x, y::ys) =
+      if x <= y then x::y::ys
+      else y::ins(x, ys)
+
+fun insort [] = []
+  | insort (x::xs) = ins(x, insort xs)
+
+(* 3.20 快速排序 *)
+
+fun quick [] = []
+  | quick [x] = [x]
+  | quick (a::bs) =
+      let fun partition (left, right, []) : real list =
+            (quick left) @ (a :: quick right)
+          | partition (left, right, x::xs) =
+            (* 按大小分開 *)
+            if x <= a then partition (x::left, right, xs)
+            else partition (left, x::right, xs)
+      in partition([], [], bs) end
+
 val () = Check.done ()
